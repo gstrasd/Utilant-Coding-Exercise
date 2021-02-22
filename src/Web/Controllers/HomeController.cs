@@ -14,52 +14,78 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly IAlbumSearchService _searchService;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
         private readonly int _pageSize;
 
-        public HomeController(IAlbumSearchService searchService, ILogger logger, int pageSize)
+        public HomeController(IAlbumSearchService searchService, IUserRepository userRepository, ILogger logger, int pageSize)
         {
             _searchService = searchService;
+            _userRepository = userRepository;
             _logger = logger;
             _pageSize = pageSize;
         }
 
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> Index([FromForm] string search, [FromForm] int page = 1, [FromForm] int albumId = 0)
+        public async Task<IActionResult> Index([FromForm] string search, [FromForm] int page = 1, [FromForm] int albumId = 0, [FromForm] int userId = 0)
         {
             _logger.Information("Performing search...");
 
-            var (results, pageCount) = await _searchService.SearchAsync(search, page, _pageSize);
+            List<Album> albums = default;
+            int pageCount = default;
+            List<Post> blog = default;
+
+            await Task.WhenAll(
+                Task.Run(async () => (albums, pageCount) = await _searchService.SearchAsync(search, page, _pageSize)),
+                Task.Run(async () => blog = userId != default ? await _userRepository.GetBlogAsync(userId) : new List<Post>()));
+
             var model = new SearchViewModel
             {
                 SearchValue = search,
                 Page = page,
                 PageCount = pageCount,
                 Albums = (
-                    from r in results
-                    let suite = r.User.Address.Suite
-                    let cityZip = $"{r.User.Address.City}, {r.User.Address.ZipCode}"
+                    from a in albums
+                    let suite = a.User.Address.Suite
+                    let cityZip = $"{a.User.Address.City}, {a.User.Address.ZipCode}"
                     select new AlbumViewModel
                     {
-                        AlbumId = r.AlbumId,
-                        Selected = r.AlbumId == albumId,
-                        Title = r.Title,
-                        Thumbnail = r.Thumbnail,
+                        AlbumId = a.AlbumId,
+                        UserId = a.User.UserId,
+                        AlbumSelected = a.AlbumId == albumId && userId == default,
+                        BlogSelected = a.AlbumId == albumId && userId != default,
+                        Title = a.Title,
+                        Thumbnail = a.Thumbnail,
                         Photos = (
-                            from p in r.Photos
+                            from p in a.Photos
                             select new PhotoViewModel
                             {
                                 Title = p.Title,
                                 Thumbnail = p.Url
                             }).ToList(),
-                        UserName = r.User.Name,
-                        Email = r.User.Email,
-                        Phone = r.User.Phone,
-                        AddressLine1 = r.User.Address.Street,
+                        UserName = a.User.Name,
+                        Email = a.User.Email,
+                        Phone = a.User.Phone,
+                        AddressLine1 = a.User.Address.Street,
                         AddressLine2 = !String.IsNullOrWhiteSpace(suite) ? suite : cityZip,
                         AddressLine3 = !String.IsNullOrWhiteSpace(suite) ? cityZip : String.Empty,
-                        GeoLocation = r.User.Address.GeoLocation
+                        GeoLocation = a.User.Address.GeoLocation,
+                        Blog = (
+                            from post in blog
+                            select new PostViewModel
+                            {
+                                Title = post.Title,
+                                Body = post.Body,
+                                Comments = (
+                                    from c in post.Comments
+                                    select new CommentViewModel
+                                    {
+                                        Name = c.Name,
+                                        Email = c.Email,
+                                        Body = c.Body
+                                    }).ToList()
+                            }).ToList()
                     }).ToList()
             };
 

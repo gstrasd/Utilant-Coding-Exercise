@@ -15,8 +15,6 @@ namespace Infrastructure
     {
         private static readonly JsonSerializerOptions _options = new JsonSerializerOptions {PropertyNameCaseInsensitive = true, NumberHandling = JsonNumberHandling.AllowReadingFromString };
         // NOTE: HttpClient is disposable, but it cannot be disposed here because it is being used as a singleton.
-        // https://www.stevejgordon.co.uk/introduction-to-httpclientfactory-aspnetcore
-        // http://byterot.blogspot.com/2016/07/singleton-httpclient-dns.html
         private readonly HttpClient _client;
         private readonly ILogger _logger;
 

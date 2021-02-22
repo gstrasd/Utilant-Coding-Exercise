@@ -60,7 +60,7 @@ namespace Application
             return result;
         }
 
-        public async Task<List<Post>> GetUserBlog(int userId)
+        public async Task<List<Post>> GetBlogAsync(int userId)
         {
             if (userId <= 0) throw new ArgumentOutOfRangeException(nameof(userId), "Argument must be a positive, non-zero value.");
 
@@ -89,7 +89,7 @@ namespace Application
                         {
                             Name = pc.Name,
                             Email = email,
-                            Content = pc.Body
+                            Body = pc.Body
                         };
                     }).ToList()
                 }).ToList();

@@ -9,6 +9,6 @@ namespace Application.Domain
     public interface IUserRepository
     {
         Task<User> GetUserAsync(int userId);
-        Task<List<Post>> GetUserBlog(int userId);
+        Task<List<Post>> GetBlogAsync(int userId);
     }
 }

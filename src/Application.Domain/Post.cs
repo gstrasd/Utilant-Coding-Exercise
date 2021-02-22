@@ -7,12 +7,6 @@ using System.Threading.Tasks;
 
 namespace Application.Domain
 {
-    public class Blog
-    {
-        public int UserId { get; set; }
-        public List<Post> Posts { get; set; }
-    }
-
     public class Post
     {
         public string Title { get; set; }
@@ -24,6 +18,6 @@ namespace Application.Domain
     {
         public string Name { get; set; }
         public MailAddress Email { get; set; }
-        public string Content { get; set; }
+        public string Body { get; set; }
     }
 }

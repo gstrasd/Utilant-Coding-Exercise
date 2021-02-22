@@ -41,7 +41,7 @@ namespace Application
             return user;
         }
 
-        public async Task<List<Post>> GetUserBlog(int userId)
+        public async Task<List<Post>> GetBlogAsync(int userId)
         {
             if (userId <= 0) throw new ArgumentOutOfRangeException(nameof(userId), "Argument must be a positive, non-zero value.");
 
@@ -50,7 +50,7 @@ namespace Application
             if (_blog.TryGetValue(userId, out var blog)) return blog;
 
             _logger.Verbose($"Blog for user {userId} not found in cache.");
-            blog = await _repository.GetUserBlog(userId);
+            blog = await _repository.GetBlogAsync(userId);
 
             if (blog == default) return default;
 

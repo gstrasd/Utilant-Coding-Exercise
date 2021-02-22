@@ -35,7 +35,10 @@ namespace Web.Modules
                 .As<ILogger>()
                 .SingleInstance();
 
-            builder.Register(c => new HomeController(c.Resolve<IAlbumSearchService>(), c.Resolve<ILogger>(), Int32.Parse(_configuration["PageSize"])))
+            builder.Register(c => new HomeController(
+                    c.Resolve<IAlbumSearchService>(), 
+                    c.Resolve<IUserRepository>(), 
+                    c.Resolve<ILogger>(), Int32.Parse(_configuration["PageSize"])))
                 .AsSelf()
                 .InstancePerLifetimeScope();
         }

@@ -97,6 +97,7 @@ form {
     display: grid;
     grid-template:
                 ". search ." auto
+                ". div ." auto
                 ". results ." auto /
                 auto minmax(980px, 980px) auto;
 }
@@ -105,6 +106,11 @@ section.search {
     grid-area: search;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+section.search input[name="search"] {
+    font-size: 1.75em;
 }
 
 section.results {
@@ -130,16 +136,22 @@ section.pages span:hover:not(.current) {
     background-color: #f6f6f6;
 }
 
+section.div {
+    height: 8px;
+    background-color: #0072EF;
+    margin: 20px 0 0 0;
+}
+
 section.album {
     display: grid;
     grid-template:
                "title title" auto
                "photo user" auto
-               "photos photos" auto /
+               "sub sub" auto /
                150px auto;
     background-color: #f6f6f6;
-    padding: 0 0 20px 20px;
-    margin: 10px 0;
+    padding: 0 20px 20px 20px;
+    margin: 0 0 20px 0;
 }
 
 section.album h2.title {
@@ -166,7 +178,7 @@ section.user > h3 {
 }
 
 section.photos {
-    grid-area: photos;
+    grid-area: sub;
     display: flex;
     flex-flow: row wrap;
     flex-direction: row;
@@ -186,5 +198,43 @@ section.photos figure > img {
 figcaption {
     color: #333333;
     font-size: .5em;
-
 }
+
+section.blog {
+    grid-area: sub;
+}
+
+section.blog .body {
+    background-color: white;
+    
+    border: solid 1px #d0d0d0;
+    padding: 6px 12px;
+    font-style: italic;
+    margin: 10px 0 0 0;
+    font-family: "Times New Roman"
+}
+
+section.post > div.body {
+    width: 770px;
+}
+
+section.comment > div.body {
+    width: 700px;
+}
+
+section.blog section.post {
+    margin-left: 40px;
+}
+
+section.blog section.comment {
+    margin-left: 70px;
+    display: flex;
+    flex-flow: column;
+    justify-items: right;
+}
+
+section.post label {
+    font-size: .8em;
+    margin-left: 10px;
+}
+

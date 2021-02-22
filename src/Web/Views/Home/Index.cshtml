@@ -17,26 +17,29 @@
         }
         else
         {
-    <section class="pages">
-        @foreach (var page in Enumerable.Range(1, Model.PageCount))
-        {
-            if (page == @Model.Page)
-            {
-                <span class="current">@(page)</span>
-            }
-            else
-            {
-                <span onclick="post({page:@(page)});">@(page)</span>    
-            }
-        }
-    </section>
+            <section class="pages">
+                @foreach (var page in Enumerable.Range(1, Model.PageCount))
+                {
+                    if (page == @Model.Page)
+                    {
+                        <span class="current">@(page)</span>
+                    }
+                    else
+                    {
+                        <span onclick="post({page:@(page)});">@(page)</span>
+                    }
+                }
+            </section>
+
+            <section class="div"></section>
+
             @foreach (var album in @Model.Albums)
             {
                 <section class="album">
-                    <h2 class="title" onclick="post({ albumId: @(album.Selected ? 0 : album.AlbumId), page:@(Model.Page) });">@album.Title</h2>
-                    <img src="@album.Thumbnail" onclick="post({ albumId: @(album.Selected ? 0 : album.AlbumId), page:@(Model.Page) });"/>
+                    <h2 class="title" onclick="post({ albumId: @(album.AlbumSelected ? 0 : album.AlbumId), userId: 0, page:@(Model.Page) });">@album.Title</h2>
+                    <img src="@album.Thumbnail" onclick="post({ albumId: @(album.AlbumSelected ? 0 : album.AlbumId), userId: 0, page:@(Model.Page) });" />
                     <section class="user">
-                        <h3>@album.UserName</h3>
+                        <h3 onclick="post({albumId:@(album.BlogSelected ? 0 : album.AlbumId), userId:@(album.UserId), page:@(Model.Page)});">@album.UserName</h3>
                         <label>@album.Email</label>
                         <label>@album.Phone</label>
                         <label>@album.AddressLine1</label>
@@ -44,15 +47,37 @@
                         <label>@album.AddressLine3</label>
                     </section>
 
-                    @if (album.Selected)
+                    @if (album.AlbumSelected)
                     {
                         <section class="photos">
                             @foreach (var photo in album.Photos)
                             {
                                 <figure>
-                                    <img src="@photo.Thumbnail"/>
+                                    <img src="@photo.Thumbnail" />
                                     <figcaption>@photo.Title</figcaption>
                                 </figure>
+                            }
+                        </section>
+                    }
+                    
+                    @if (album.BlogSelected)
+                    {
+                        <section class="blog">
+                            @foreach (var post in album.Blog)
+                            {
+                                <section class="post">
+                                    <h3>@post.Title</h3>
+                                    <div class="body">@post.Body</div>
+                                    <label>@album.UserName</label>
+                                    @foreach (var comment in post.Comments)
+                                    {
+                                        <section class="comment">
+                                            <div class="body">@comment.Body</div>
+                                            <label>@comment.Name</label>
+                                            <label>@comment.Email</label>
+                                        </section>
+                                    }
+                                </section>
                             }
                         </section>
                     }
@@ -61,5 +86,6 @@
         }
     </section>
     <input type="hidden" name="albumId" />
+    <input type="hidden" name="userId" />
     <input type="hidden" name="page" />
 </form>
