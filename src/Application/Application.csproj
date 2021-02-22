@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application.Domain\Application.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure.Domain\Infrastructure.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="Geolocation" Version="1.2.1" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="System.Interactive" Version="5.0.0" />
+    <PackageReference Include="System.Interactive.Async" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <HintPath>..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\5.0.0\ref\net5.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
